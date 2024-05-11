@@ -9,8 +9,8 @@ const authenticateUser = async (req, res, next) => {
   }
 
   try {
-    const decodedToken = jwt.verify(token, process.env.MIDDLEWARE_KEY);
-    const user = User.findOne({ twitterId: decodedToken.userId });
+    const decodedToken = jwt.verify(token, process.env.MIDDLEWARE_TOKEN);
+    const user = await User.findById(decodedToken.userId).lean();
     if (!user) {
       return res.status(401).json({ error: "Unauthorized" });
     }

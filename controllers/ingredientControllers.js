@@ -16,7 +16,7 @@ const createIngredient = async (req, res) => {
 // Controller function to get a single ingredient by ID
 const getIngredientById = async (req, res) => {
   try {
-    const ingredient = await Ingredient.findById(req.params.id); // Find ingredient by ID
+    const ingredient = await Ingredient.findById(req.params.id).lean(); // Find ingredient by ID
     if (!ingredient) {
       return res.status(404).json({ error: "Ingredient not found" });
     }
@@ -32,7 +32,7 @@ const getIngredientById = async (req, res) => {
 // Controller function to get all ingredients
 const getAllIngredients = async (req, res) => {
   try {
-    const ingredients = await Ingredient.find(); // Retrieve all ingredients
+    const ingredients = await Ingredient.find().lean(); // Retrieve all ingredients
     res.status(200).json({ ingredients });
   } catch (error) {
     console.error(error);
@@ -49,7 +49,7 @@ const updateIngredient = async (req, res) => {
       req.params.id,
       req.body,
       { new: true }
-    ); // Find and update ingredient
+    ).lean(); // Find and update ingredient
     if (!ingredient) {
       return res.status(404).json({ error: "Ingredient not found" });
     }

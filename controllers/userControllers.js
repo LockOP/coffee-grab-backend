@@ -19,7 +19,7 @@ const verifyAndLogin = async (req, res) => {
     // If OTP verification is successful, proceed with user authentication
     if (verificationCheck.status === "approved") {
       // Check if user exists
-      let user = await User.findOne({ phoneNumber, countryCode });
+      let user = await User.findOne({ phoneNumber, countryCode }).lean();
 
       // If user doesn't exist, create a new user
       if (!user) {
@@ -27,8 +27,8 @@ const verifyAndLogin = async (req, res) => {
       }
 
       // Generate JWT token
-      const { id, ...userObj } = user.toObject();
-      const token = jwt.sign({ userId: id }, process.env.MIDDLEWARE_TOKEN, {
+      const { _id, ...userObj } = user.toObject();
+      const token = jwt.sign({ userId: _id }, process.env.MIDDLEWARE_TOKEN, {
         expiresIn: "48h",
       });
 
@@ -56,7 +56,7 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
     const message = "user_found";
-    const user = await User.findOne({ phoneNumber, countryCode });
+    const user = await User.findOne({ phoneNumber, countryCode }).lean();
     if (!user) {
       user = await User.create({ phoneNumber, countryCode });
       message = "user_registered";
@@ -132,7 +132,7 @@ const createUser = async (req, res) => {
 // Controller function to get a single user by ID
 const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id); // Find user by ID
+    const user = await User.findById(req.params.id).lean(); // Find user by ID
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -148,7 +148,7 @@ const getUserById = async (req, res) => {
 // Controller function to get all users
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find(); // Retrieve all users
+    const users = await User.find().lean(); // Retrieve all users
     res.status(200).json({ users });
   } catch (error) {
     console.error(error);
@@ -163,7 +163,7 @@ const updateUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-    }); // Find and update user
+    }).lean(); // Find and update user
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -179,7 +179,7 @@ const updateUser = async (req, res) => {
 // Controller function to delete an existing user
 const deleteUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id); // Find and delete user
+    const user = await User.findByIdAndDelete(req.params.id).lean(); // Find and delete user
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

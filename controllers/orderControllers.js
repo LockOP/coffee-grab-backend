@@ -16,7 +16,7 @@ const createOrder = async (req, res) => {
 // Controller function to get a single order by ID
 const getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id); // Find order by ID
+    const order = await Order.findById(req.params.id).lean(); // Find order by ID
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
@@ -32,7 +32,7 @@ const getOrderById = async (req, res) => {
 // Controller function to get all orders
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find(); // Retrieve all orders
+    const orders = await Order.find().lean(); // Retrieve all orders
     res.status(200).json({ orders });
   } catch (error) {
     console.error(error);
@@ -47,7 +47,7 @@ const updateOrder = async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-    }); // Find and update order
+    }).lean(); // Find and update order
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }

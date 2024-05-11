@@ -9,6 +9,7 @@ const { ingredientRouter } = require("./routers/ingredientRouters");
 const { productRouter } = require("./routers/productRouters");
 const { orderRouter } = require("./routers/orderRouters");
 const { userRouter } = require("./routers/userRouters");
+const { clientRouter } = require("./routers/clientRouters");
 
 app.use(express.json());
 app.use(cors());
@@ -35,6 +36,9 @@ app.use("/api/ingredient", ingredientRouter);
 app.use("/api/product", productRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/user", userRouter);
+
+app.use("/api/client", authenticateUser, clientRouter);
+
 
 const port = 4000;
 app.listen(port, () => {
