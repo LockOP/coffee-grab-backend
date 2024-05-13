@@ -27,7 +27,7 @@ const verifyAndLogin = async (req, res) => {
       }
 
       // Generate JWT token
-      const { _id, ...userObj } = user.toObject();
+      const { _id, ...userObj } = user;
       const token = jwt.sign({ userId: _id }, process.env.MIDDLEWARE_TOKEN, {
         expiresIn: "48h",
       });
